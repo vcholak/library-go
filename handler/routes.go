@@ -10,6 +10,7 @@ func (h *Handler) Register(v1 *echo.Group) {
 	authors.HEAD("", h.AuthorsTotal)
 	authors.GET("", h.Authors)
 	authors.POST("", h.CreateAuthor)
+  authors.GET("/:id", h.GetAuthor)
 
 	genres := v1.Group("/genres")
 	genres.HEAD("", h.GenresTotal)

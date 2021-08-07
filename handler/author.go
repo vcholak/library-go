@@ -50,3 +50,23 @@ func (h *Handler) CreateAuthor(c echo.Context) error {
   fmt.Println("Created author:", author)
 	return c.JSON(http.StatusOK, author)
 }
+
+// GetAuthor returns author details
+func (h *Handler) GetAuthor(c echo.Context) error {
+
+  s := c.Param("id")
+
+  id, err := strconv.ParseUint(s, 10, 64)
+  if err != nil {
+    fmt.Println("GetAuthor error:", err)
+    return c.JSON(http.StatusBadRequest, err)
+  }
+
+  author, err2 := h.authorStore.GetAuthor(id)
+  if err2 != nil {
+    fmt.Println("GetAuthor error:", err2)
+    return c.JSON(http.StatusInternalServerError, err2)
+  }
+
+  return c.JSON(http.StatusOK, author)
+}
