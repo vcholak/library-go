@@ -11,15 +11,42 @@ import (
 	. "gorm.io/gorm/utils/tests"
 )
 
-func TestCreate(t *testing.T)  {
+var d = db.TestDB()
 
-  d := db.TestDB()
+func TestCreate(t *testing.T) {
 
   d.Migrator().DropTable(&model.Author{})
 	if err := d.Migrator().AutoMigrate(&model.Author{}); err != nil {
 		t.Errorf("failed to migrate, got error: %v", err)
 	}
 
+  createAuthor()
+
+  result := model.Author{}
+	if err := d.First(&result, "firstName = ? AND familyName = ?", "Xxx", "Yyy").Error; err != nil {
+		t.Fatalf("Failed to find author")
+	}
+
+	AssertEqual(t, result.ID, 1)
+}
+
+func TestFindAll(t *testing.T) {
+  d.Migrator().DropTable(&model.Author{})
+	if err := d.Migrator().AutoMigrate(&model.Author{}); err != nil {
+		t.Errorf("failed to migrate, got error: %v", err)
+	}
+
+  createAuthor()
+
+  result := []model.Author{}
+  if err := d.Find(&result).Error; err != nil {
+    t.Fatalf("Failed to find all authors")
+  }
+
+  AssertEqual(t, len(result), 1)
+}
+
+func createAuthor() {
   author := model.Author{
     ID: 1,
     Firstname: "Xxx",
@@ -28,11 +55,4 @@ func TestCreate(t *testing.T)  {
   }
 
   d.Create(&author)
-
-  result := model.Author{}
-	if err := d.First(&result, "firstName = ? AND familyName = ?", "Xxx", "Yyy").Error; err != nil {
-		t.Fatalf("Failed to find record")
-	}
-
-	AssertEqual(t, result.ID, 1)
 }

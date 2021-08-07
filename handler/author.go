@@ -30,7 +30,7 @@ func (h *Handler) Authors(c echo.Context) error {
   authors, err := h.authorStore.Authors()
   if err != nil {
     fmt.Println("Authors error:", err)
-    return err
+    return c.JSON(http.StatusInternalServerError, err)
   }
 
 	return c.JSON(http.StatusOK, authors)
@@ -45,7 +45,7 @@ func (h *Handler) CreateAuthor(c echo.Context) error {
 	}
   if err := h.authorStore.NewAuthor(author); err != nil {
     fmt.Println("CreateAuthor error:", err)
-		return err
+		return c.JSON(http.StatusInternalServerError, err)
   }
   fmt.Println("Created author:", author)
 	return c.JSON(http.StatusOK, author)

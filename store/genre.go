@@ -1,8 +1,6 @@
 package store
 
 import (
-	"fmt"
-
 	"github.com.vcholak.library/model"
 	"gorm.io/gorm"
 )
@@ -24,14 +22,11 @@ func (gs *GenreStore) GenreCount() (int64, error) {
 	return count, nil
 }
 
-func (gs *GenreStore) NewGenre(genre *model.Genre) {
+func (gs *GenreStore) NewGenre(genre *model.Genre) error {
 
   result := gs.db.Create(genre)
 
-  if result.Error != nil {
-    fmt.Println(result.Error)
-    panic("Failed to create a new genre")
-  }
+  return result.Error
 }
 
 func (gs *GenreStore) Genres() ([]model.Genre, error) {

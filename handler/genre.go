@@ -30,7 +30,7 @@ func (h *Handler) Genres(c echo.Context) error {
   genres, err := h.genreStore.Genres()
   if err != nil {
     fmt.Println("Genres error:", err)
-    return err
+    return c.JSON(http.StatusInternalServerError, err)
   }
 
 	return c.JSON(http.StatusOK, genres)
@@ -44,7 +44,11 @@ func (h *Handler) CreateGenre(c echo.Context) error {
     fmt.Println("CreateGenre error:", err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
-  h.genreStore.NewGenre(genre)
+
+  if err := h.genreStore.NewGenre(genre); err != nil {
+    fmt.Println("CreateGenre error:", err)
+		return c.JSON(http.StatusInternalServerError, err)
+  }
   fmt.Println("Created gerne:", genre)
 	return c.JSON(http.StatusOK, genre)
 }
@@ -55,16 +59,14 @@ func (h *Handler) GetGenre(c echo.Context) error {
 
   id, err := strconv.ParseUint(s, 10, 64)
   if err != nil {
-    msg := fmt.Sprintf("Failed to parse id param: %s", s)
-    fmt.Println("GetGenre error:", msg)
-    return c.String(http.StatusBadRequest, msg)
+    fmt.Println("GetGenre error:", err)
+    return c.JSON(http.StatusBadRequest, err)
   }
 
   genre, err2 := h.genreStore.GetGerne(id)
   if err2 != nil {
-    msg := fmt.Sprintf("Failed to parse id param: %v", id)
-    fmt.Println("GetGenre error:", msg)
-    return err2
+    fmt.Println("GetGenre error:", err2)
+    return c.JSON(http.StatusInternalServerError, err2)
   }
 
   return c.JSON(http.StatusOK, genre)
