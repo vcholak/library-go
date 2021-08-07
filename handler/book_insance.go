@@ -10,9 +10,12 @@ import (
 // CopiesTotal returns total number of BookInstances
 func (h *Handler) CopiesTotal(c echo.Context) error {
 
-  copies := 10
+  copies, err := h.copyStore.BookInstanceCount()
+  if err != nil {
+    panic("Failed to fetch book instance count")
+  }
 
-	c.Response().Header().Set("X-Result-Count", strconv.Itoa(copies))
+	c.Response().Header().Set("X-Result-Count", strconv.FormatInt(copies, 10))
   c.Response().Header().Set("Access-Control-Expose-Headers", "X-Result-Count")
 
 	return c.NoContent(http.StatusOK)
@@ -21,9 +24,12 @@ func (h *Handler) CopiesTotal(c echo.Context) error {
 // AvailableCopiesTotal returns total number of BookInstances
 func (h *Handler) AvailableCopiesTotal(c echo.Context) error {
 
-  available_copies := 5
+  available_copies, err := h.copyStore.AvailableBookInstanceCount()
+  if err != nil {
+    panic("Failed to fetch book instance count")
+  }
 
-  c.Response().Header().Set("X-Result-Count", strconv.Itoa(available_copies))
+  c.Response().Header().Set("X-Result-Count", strconv.FormatInt(available_copies, 10))
   c.Response().Header().Set("Access-Control-Expose-Headers", "X-Result-Count")
 
 	return c.NoContent(http.StatusOK)

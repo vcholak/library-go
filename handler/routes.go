@@ -14,6 +14,8 @@ func (h *Handler) Register(v1 *echo.Group) {
 	genres := v1.Group("/genres")
 	genres.HEAD("", h.GenresTotal)
 	genres.GET("", h.Genres)
+  genres.GET("/:id", h.GetGenre)
+  genres.POST("", h.CreateGenre)
 
 	books := v1.Group("/books")
 	books.HEAD("", h.BooksTotal)

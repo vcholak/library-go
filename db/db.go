@@ -16,7 +16,7 @@ func New() *gorm.DB {
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
   if err != nil {
-  fmt.Println("Storage error: ", err)
+    fmt.Println("Storage error: ", err)
     panic("Failed to connect database")
   }
 	db.Set("MaxIdleConns", 3)
@@ -29,7 +29,7 @@ func TestDB() *gorm.DB {
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
   if err != nil {
-  fmt.Println("Storage error: ", err)
+    fmt.Println("Storage error: ", err)
     panic("Failed to connect database")
   }
 	db.Set("MaxIdleConns", 3)
@@ -53,6 +53,6 @@ func AutoMigrate(db *gorm.DB) {
 	)
 	if err != nil {
 		fmt.Println("DB migration error: ", err)
-    	panic("Failed to do database migrations")
+    panic("Failed to do database migrations")
 	}
 }

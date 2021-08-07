@@ -3,24 +3,29 @@ package model
 import (
 	"time"
 
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
 
 type Author struct {
-	gorm.Model
-	Firstname  string `gorm:"not null"`
-	Familyname string `gorm:"not null"`
-	Birth      *time.Time `gorm:"not null"`
-	Death      *time.Time 
-	Name       string 
-	Lifespan   string 
-	Url        string
+  ID uint `gorm:"primarykey" json:"id"`
+  CreatedAt time.Time
+  UpdatedAt time.Time
+  DeletedAt gorm.DeletedAt `gorm:"index"`
+	Firstname  string `gorm:"not null" json:"first_name"`
+	Familyname string `gorm:"not null" json:"family_name"`
+	Birth      datatypes.Date `gorm:"not null" json:"birth_date"`
+	Death      datatypes.Date `json:"death_date"`
+	Name       string `json:"name"`
+	Lifespan   string `json:"life_span"`
 }
 
 type Genre struct {
-	gorm.Model
-	Name string 
-	Url  string
+	ID uint `gorm:"primarykey" json:"id"`
+  CreatedAt time.Time
+  UpdatedAt time.Time
+  DeletedAt gorm.DeletedAt `gorm:"index"`
+	Name string `gorm:"not null" json:"name"`
 }
 
 type Book struct {
@@ -30,7 +35,6 @@ type Book struct {
 	Summary string
 	ISBN    string
 	Genres  []Genre  `gorm:"many2many:book_genres;"`
-	Url     string
 }
 
 type BookInstance struct {
@@ -39,15 +43,14 @@ type BookInstance struct {
 	Imprint string
 	Status  BookInstanceStatus `gorm:"not null"`
 	Dueback string `sql:"type:date"`
-	Url     string
 }
 
 type BookInstanceStatus uint8
 const (
 	NotAvailable BookInstanceStatus = iota
-	OnOrder 
+	OnOrder
 	InTransit
 	OnHold
 	OnLoan
-	InLibrary	
+	InLibrary
 )

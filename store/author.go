@@ -15,11 +15,33 @@ func NewAuthorStore(db *gorm.DB) *AuthorStore  {
 	}
 }
 
-func (bs *AuthorStore) AuthorCount() (int64, error) {
+func (as *AuthorStore) AuthorCount() (int64, error) {
 	var count int64
-	bs.db.Model(&model.Author{}).Count(&count)
+	result := as.db.Model(&model.Author{}).Count(&count)
 
-	return count, nil
+	return count, result.Error
 }
 
+func (as *AuthorStore) NewAuthor(author *model.Author) error {
 
+  result := as.db.Create(author)
+
+  return result.Error
+}
+
+func (as *AuthorStore) Authors() ([]model.Author, error) {
+
+  var authors []model.Author
+
+  result := as.db.Find(&authors)
+
+  return authors, result.Error
+}
+
+func (as *AuthorStore) GetAuthor(id uint64) (model.Author, error) {
+
+  var author model.Author
+  result := as.db.First(&author, id)
+
+  return author, result.Error
+}
