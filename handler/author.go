@@ -15,7 +15,7 @@ func (h *Handler) AuthorsTotal(c echo.Context) error {
   authors, err := h.authorStore.AuthorCount()
   if err != nil {
     fmt.Println("AuthorsTotal error:", err)
-    return err
+    return c.JSON(http.StatusInternalServerError, err)
   }
 
 	c.Response().Header().Set("X-Result-Count", strconv.FormatInt(authors, 10))

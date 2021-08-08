@@ -1,26 +1,21 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
-	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
-
 	"github.com.vcholak.library/model"
+	"github.com/labstack/echo/v4"
 )
-
-type BookDetails struct {
-  ID uint `json:"id"`
-  Title string `json:"title"`
-}
 
 // BooksTotal returns total number of Books
 func (h *Handler) BooksTotal(c echo.Context) error {
 
 	books, err := h.bookStore.BookCount()
   if err != nil {
-    panic("Failed to fetch genre count")
+    fmt.Println("BooksTotal error:", err)
+    return c.JSON(http.StatusInternalServerError, err)
   }
 
 	c.Response().Header().Set("X-Result-Count", strconv.FormatInt(books, 10))
@@ -32,29 +27,45 @@ func (h *Handler) BooksTotal(c echo.Context) error {
 // Books returns a list of all books
 func (h *Handler) Books(c echo.Context) error {
 
-  //TODO call DB
-  book := model.Book{
-    Model: gorm.Model{ID: 1},
-    Title: "The Talisman",
+  books, err := h.bookStore.Books()
+  if err != nil {
+    fmt.Println("Books error:", err)
+    return c.JSON(http.StatusInternalServerError, err)
   }
-
-  books := make([]BookDetails, 0)
-  books = append(books, BookDetails{
-    ID: book.ID,
-    Title: book.Title,
-  })
 
 	return c.JSON(http.StatusOK, books)
 }
 
 func (h *Handler) GetBook(c echo.Context) error {
-	//
-	return nil
+	s := c.Param("id")
+
+  id, err := strconv.ParseUint(s, 10, 64)
+  if err != nil {
+    fmt.Println("GetBook error:", err)
+    return c.JSON(http.StatusBadRequest, err)
+  }
+
+  book, err2 := h.bookStore.GetBook(id)
+  if err2 != nil {
+    fmt.Println("GetBook error:", err2)
+    return c.JSON(http.StatusInternalServerError, err2)
+  }
+
+  return c.JSON(http.StatusOK, book)
 }
 
 func (h *Handler) CreateBook(c echo.Context) error {
-	//
-	return nil
+	book := new(model.Book)
+  if err := c.Bind(book); err != nil {
+    fmt.Println("CreateBook error:", err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+  if err := h.bookStore.NewBook(book); err != nil {
+    fmt.Println("CreateBook error:", err)
+		return c.JSON(http.StatusInternalServerError, err)
+  }
+  fmt.Println("Created book:", book)
+	return c.JSON(http.StatusOK, book)
 }
 
 func (h *Handler) UpdateBook(c echo.Context) error {

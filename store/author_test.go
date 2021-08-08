@@ -13,7 +13,7 @@ import (
 
 var d = db.TestDB()
 
-func TestCreate(t *testing.T) {
+func TestCreateAuthor(t *testing.T) {
 
   d.Migrator().DropTable(&model.Author{})
 	if err := d.Migrator().AutoMigrate(&model.Author{}); err != nil {
@@ -23,7 +23,7 @@ func TestCreate(t *testing.T) {
   createAuthor()
 
   result := model.Author{}
-	if err := d.First(&result, "firstName = ? AND familyName = ?", "Xxx", "Yyy").Error; err != nil {
+	if err := d.First(&result, "Firstname = ? AND Familyname = ?", "Xxx", "Yyy").Error; err != nil {
 		t.Fatalf("Failed to find author")
 	}
 
@@ -48,7 +48,6 @@ func TestFindAll(t *testing.T) {
 
 func createAuthor() {
   author := model.Author{
-    ID: 1,
     Firstname: "Xxx",
     Familyname: "Yyy",
     Birth: datatypes.Date(time.Now().UTC()),

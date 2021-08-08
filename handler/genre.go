@@ -15,7 +15,7 @@ func (h *Handler) GenresTotal(c echo.Context) error {
   genres, err := h.genreStore.GenreCount()
   if err != nil {
     fmt.Println("GenresTotal error:", err)
-    return err
+    return c.JSON(http.StatusInternalServerError, err)
   }
 
 	c.Response().Header().Set("X-Result-Count", strconv.FormatInt(genres, 10))
