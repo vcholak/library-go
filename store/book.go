@@ -4,6 +4,7 @@ import (
 	"github.com.vcholak.library/model"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type BookStore struct {
@@ -45,7 +46,7 @@ func (bs *BookStore) BookCount() (int64, error) {
 
 func (bs *BookStore) NewBook(book *model.Book) error {
 
-  result := bs.db.Create(book)
+  result := bs.db.Preload(clause.Associations).Create(book)
 
   return result.Error
 }
@@ -53,7 +54,7 @@ func (bs *BookStore) NewBook(book *model.Book) error {
 func (bs *BookStore) GetBook(id uint64) (model.Book, error) {
 
   var book model.Book
-  result := bs.db.First(&book, id)
+  result := bs.db.Preload("Author").Preload("Genre").First(&book, id)
 
   return book, result.Error
 }

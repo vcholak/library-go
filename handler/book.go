@@ -60,6 +60,21 @@ func (h *Handler) CreateBook(c echo.Context) error {
     fmt.Println("CreateBook error:", err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
+
+  author, err := h.authorStore.GetAuthor(uint64(book.AuthorID))
+  if err != nil {
+    fmt.Println("CreateBook error:", err)
+		return c.JSON(http.StatusInternalServerError, err)
+  }
+  book.Author = author
+
+  genre, err := h.genreStore.GetGerne(uint64(book.GenreID))
+  if err != nil {
+    fmt.Println("CreateBook error:", err)
+		return c.JSON(http.StatusInternalServerError, err)
+  }
+  book.Genre = genre
+
   if err := h.bookStore.NewBook(book); err != nil {
     fmt.Println("CreateBook error:", err)
 		return c.JSON(http.StatusInternalServerError, err)

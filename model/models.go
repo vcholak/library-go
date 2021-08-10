@@ -13,6 +13,7 @@ type Author struct {
 	Death      datatypes.Date `json:"death_date"`
 	Name       string `json:"name"`
 	Lifespan   string `json:"life_span"`
+  Books []Book `json:"books"`
 }
 
 type Genre struct {
@@ -25,19 +26,19 @@ type Genre struct {
 type Book struct {
 	gorm.Model
 	Title   string `gorm:"unique_index;not null" json:"title"`
-  AuthorID uint
-	Author  Author // `gorm:"foreignkey:AuthorID"`
+  AuthorID uint  `json:"author_id"`
+	Author  Author `json:"author"` // `gorm:"foreignkey:AuthorID"`
 	Summary string `gorm:"not null" json:"summary"`
 	ISBN    string `gorm:"not null" json:"isbn"`
-  GenreID uint
-	Genre   Genre  // `gorm:"foreignkey:ID"`
+  GenreID uint   `json:"genre_id"`
+	Genre   Genre `json:"genre"`  // `gorm:"foreignkey:ID"`
 }
 
 // `BookInstance` belongs to `Book`, `BookID` is the foreign key
 type BookInstance struct {
 	gorm.Model
   BookID uint
-	Book Book // `gorm:"foreignkey:ID"`
+	Book Book `json:"bok"` // `gorm:"foreignkey:ID"`
 	Imprint string `gorm:"not null" json:"inprint"`
 	Status  BookInstanceStatus `gorm:"not null" json:"status"`
 	Dueback string `sql:"type:date" gorm:"not null" json:"due_date"`
