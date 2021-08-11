@@ -41,7 +41,7 @@ func (as *AuthorStore) Authors() ([]model.Author, error) {
 func (as *AuthorStore) GetAuthor(id uint64) (model.Author, error) {
 
   var author model.Author
-  result := as.db.First(&author, id)
+  result := as.db.Preload("Books").First(&author, id)
 
   return author, result.Error
 }
