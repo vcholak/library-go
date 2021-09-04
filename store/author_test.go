@@ -23,7 +23,7 @@ func TestCreateAuthor(t *testing.T) {
   createAuthor()
 
   result := model.Author{}
-	if err := d.First(&result, "Firstname = ? AND Familyname = ?", "Xxx", "Yyy").Error; err != nil {
+	if err := d.First(&result, "first_name = ? AND family_name = ?", "Xxx", "Yyy").Error; err != nil {
 		t.Fatalf("Failed to find author")
 	}
 
@@ -48,9 +48,9 @@ func TestFindAll(t *testing.T) {
 
 func createAuthor() {
   author := model.Author{
-    Firstname: "Xxx",
-    Familyname: "Yyy",
-    Birth: datatypes.Date(time.Now().UTC()),
+    FirstName: "Xxx",
+    FamilyName: "Yyy",
+    BirthDate: datatypes.Date(time.Now().UTC()),
   }
 
   d.Create(&author)

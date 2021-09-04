@@ -6,13 +6,17 @@ import (
 	"os"
 
 	"github.com.vcholak.library/model"
+	"github.com.vcholak.library/utils"
 	"gorm.io/gorm"
 
 	"gorm.io/driver/sqlite"
 )
 
+var dataDir = utils.EnvVar("DATA_DIR")
+
 func New() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open("library.db"), &gorm.Config{
+  connetion_str := fmt.Sprintf("%s/library.db?cache=shared", dataDir)
+	db, err := gorm.Open(sqlite.Open(connetion_str), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
   if err != nil {
@@ -25,7 +29,8 @@ func New() *gorm.DB {
 }
 
 func TestDB() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open("library_test.db"), &gorm.Config{
+  connetion_str := fmt.Sprintf("%s/library_test.db", dataDir)
+	db, err := gorm.Open(sqlite.Open(connetion_str), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
   if err != nil {
@@ -38,7 +43,8 @@ func TestDB() *gorm.DB {
 }
 
 func DropTestDB() error {
-	if err := os.Remove("library_test.db"); err != nil {
+  connetion_str := fmt.Sprintf("%s/library_test.db", dataDir)
+	if err := os.Remove(connetion_str); err != nil {
 		return err
 	}
 	return nil

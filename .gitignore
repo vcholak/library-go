@@ -1,3 +1,5 @@
 library.db
 
 library_test.db
+
+.env

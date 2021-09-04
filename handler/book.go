@@ -61,14 +61,14 @@ func (h *Handler) CreateBook(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-  author, err := h.authorStore.GetAuthor(uint64(book.AuthorID))
+  author, err := h.authorStore.GetAuthor(uint64(book.AuthorId))
   if err != nil {
     fmt.Println("CreateBook error:", err)
 		return c.JSON(http.StatusInternalServerError, err)
   }
   book.Author = author
 
-  genre, err := h.genreStore.GetGerne(uint64(book.GenreID))
+  genre, err := h.genreStore.GetGerne(uint64(book.GenreId))
   if err != nil {
     fmt.Println("CreateBook error:", err)
 		return c.JSON(http.StatusInternalServerError, err)
