@@ -5,7 +5,9 @@ import (
 
 	"os"
 
-	"github.com.vcholak.library/model"
+	"github.com.vcholak.library/book"
+	"github.com.vcholak.library/copy"
+	"github.com.vcholak.library/genre"
 	"github.com.vcholak.library/utils"
 	"gorm.io/gorm"
 
@@ -53,10 +55,10 @@ func DropTestDB() error {
 
 func AutoMigrate(db *gorm.DB) {
 	err := db.AutoMigrate(
-		&model.Author{},
-		&model.Genre{},
-		&model.Book{},
-		&model.BookInstance{},
+		&book.Author{},
+		&genre.Genre{},
+		&book.Book{},
+		&copy.BookInstance{},
 	)
 	if err != nil {
 		fmt.Println("DB migration error: ", err)

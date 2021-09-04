@@ -1,7 +1,7 @@
 package store
 
 import (
-	"github.com.vcholak.library/model"
+	"github.com.vcholak.library/copy"
 	"gorm.io/gorm"
 )
 
@@ -17,14 +17,14 @@ func NewBookInstanceStore(db *gorm.DB) *BookInstanceStore  {
 
 func (bs *BookInstanceStore) BookInstanceCount() (int64, error) {
 	var count int64
-	bs.db.Model(&model.BookInstance{}).Count(&count)
+	bs.db.Model(&copy.BookInstance{}).Count(&count)
 
 	return count, nil
 }
 
 func (bs *BookInstanceStore) AvailableBookInstanceCount() (int64, error) {
 	var count int64
-	bs.db.Model(&model.BookInstance{}).Count(&count) //TODO fix
+	bs.db.Model(&copy.BookInstance{}).Count(&count) //TODO fix
 
 	return count, nil
 }

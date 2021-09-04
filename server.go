@@ -1,10 +1,12 @@
 package main
 
 import (
+	bookst "github.com.vcholak.library/book/store"
+	copyst "github.com.vcholak.library/copy/store"
 	"github.com.vcholak.library/db"
+	genrest "github.com.vcholak.library/genre/store"
 	"github.com.vcholak.library/handler"
 	"github.com.vcholak.library/router"
-	"github.com.vcholak.library/store"
 )
 
 func main() {
@@ -15,10 +17,10 @@ func main() {
 	r := router.New()
 	v1 := r.Group("/api")
 
-	bs := store.NewBookStore(d)
-	as := store.NewAuthorStore(d)
-	cs := store.NewBookInstanceStore(d)
-	gs := store.NewGerneStore(d)
+	bs := bookst.NewBookStore(d)
+	as := bookst.NewAuthorStore(d)
+	cs := copyst.NewBookInstanceStore(d)
+	gs := genrest.NewGerneStore(d)
 
 	h := handler.NewHandler(bs, as, cs, gs)
 

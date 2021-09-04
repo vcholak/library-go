@@ -1,4 +1,4 @@
-package handler
+package book
 
 import (
 	"net/http"
@@ -7,7 +7,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com.vcholak.library/model"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -30,7 +29,7 @@ func TestCreateAuthor(t *testing.T) {
   e := echo.New()
   c := e.NewContext(req, rec)
 
-  author := new(model.Author)
+  author := new(Author)
   c.JSON(http.StatusOK, author)
 
   res := rec.Result()

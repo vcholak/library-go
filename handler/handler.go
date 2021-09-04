@@ -1,15 +1,20 @@
 package handler
 
-import "github.com.vcholak.library/store"
+import (
+	bookst "github.com.vcholak.library/book/store"
+	copyst "github.com.vcholak.library/copy/store"
+	genrest "github.com.vcholak.library/genre/store"
+)
 
 type Handler struct {
-	bookStore   *store.BookStore
-	authorStore *store.AuthorStore
-	copyStore   *store.BookInstanceStore
-	genreStore  *store.GenreStore
+	bookStore   *bookst.BookStore
+	authorStore *bookst.AuthorStore
+	copyStore   *copyst.BookInstanceStore
+	genreStore  *genrest.GenreStore
 }
 
-func NewHandler(bs *store.BookStore, as *store.AuthorStore, cs *store.BookInstanceStore, gs *store.GenreStore) *Handler {
+func NewHandler(bs *bookst.BookStore, as *bookst.AuthorStore, cs *copyst.BookInstanceStore,
+    gs *genrest.GenreStore) *Handler {
 	return &Handler{
 		bookStore:   bs,
 		authorStore: as,

@@ -13,7 +13,7 @@ func EnvVar(key string, testing bool) string {
   var err error
   // load .env file
   if testing {
-    err = godotenv.Load("../.env")
+    err = godotenv.Load("../../.env")
   } else {
     err = godotenv.Load()
   }
