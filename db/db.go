@@ -12,9 +12,8 @@ import (
 	"gorm.io/driver/sqlite"
 )
 
-var dataDir = utils.EnvVar("DATA_DIR")
-
 func New() *gorm.DB {
+  dataDir := utils.EnvVar("DATA_DIR", false)
   connetion_str := fmt.Sprintf("%s/library.db?cache=shared", dataDir)
 	db, err := gorm.Open(sqlite.Open(connetion_str), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
@@ -29,6 +28,7 @@ func New() *gorm.DB {
 }
 
 func TestDB() *gorm.DB {
+  dataDir := utils.EnvVar("DATA_DIR", true)
   connetion_str := fmt.Sprintf("%s/library_test.db", dataDir)
 	db, err := gorm.Open(sqlite.Open(connetion_str), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
@@ -43,6 +43,7 @@ func TestDB() *gorm.DB {
 }
 
 func DropTestDB() error {
+  dataDir := utils.EnvVar("DATA_DIR", true)
   connetion_str := fmt.Sprintf("%s/library_test.db", dataDir)
 	if err := os.Remove(connetion_str); err != nil {
 		return err
