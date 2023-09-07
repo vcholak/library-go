@@ -2,6 +2,7 @@ package store
 
 import (
 	"github.com.vcholak.library/book"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -10,7 +11,7 @@ type BookStore struct {
 	db *gorm.DB
 }
 
-func NewBookStore(db *gorm.DB) *BookStore  {
+func NewBookStore(db *gorm.DB) *BookStore {
 	return &BookStore{
 		db: db,
 	}
@@ -23,8 +24,8 @@ func (bs *BookStore) BookCount() (int64, error) {
 	return count, result.Error
 }
 
-//TODO func (bs *BookStore) Books(offset, limit int) ([]model.Book, int64, error) {
-  func (bs *BookStore) Books() ([]book.Book, error) {
+// TODO func (bs *BookStore) Books(offset, limit int) ([]model.Book, int64, error) {
+func (bs *BookStore) Books() ([]book.Book, error) {
 	// var (
 	// 	books []model.Book
 	// 	count    int64
@@ -36,34 +37,34 @@ func (bs *BookStore) BookCount() (int64, error) {
 
 	// return books, count, nil
 
-  var books []book.Book
+	var books []book.Book
 
-  result := bs.db.Preload("Author").Preload("Genre").Find(&books)
+	result := bs.db.Preload("Author").Preload("Genre").Find(&books)
 
-  return books, result.Error
+	return books, result.Error
 }
 
 func (bs *BookStore) NewBook(book *book.Book) error {
 
-  result := bs.db.Preload(clause.Associations).Create(book)
+	result := bs.db.Preload(clause.Associations).Create(book)
 
-  return result.Error
+	return result.Error
 }
 
 func (bs *BookStore) GetBook(id uint64) (book.Book, error) {
 
-  var book book.Book
-  result := bs.db.Preload("Author").Preload("Genre").First(&book, id)
+	var book book.Book
+	result := bs.db.Preload("Author").Preload("Genre").First(&book, id)
 
-  return book, result.Error
+	return book, result.Error
 }
 
-//------------------------------
+// ------------------------------
 type AuthorStore struct {
 	db *gorm.DB
 }
 
-func NewAuthorStore(db *gorm.DB) *AuthorStore  {
+func NewAuthorStore(db *gorm.DB) *AuthorStore {
 	return &AuthorStore{
 		db: db,
 	}
@@ -78,24 +79,24 @@ func (as *AuthorStore) AuthorCount() (int64, error) {
 
 func (as *AuthorStore) NewAuthor(author *book.Author) error {
 
-  result := as.db.Create(author)
+	result := as.db.Create(author)
 
-  return result.Error
+	return result.Error
 }
 
 func (as *AuthorStore) Authors() ([]book.Author, error) {
 
-  var authors []book.Author
+	var authors []book.Author
 
-  result := as.db.Find(&authors)
+	result := as.db.Find(&authors)
 
-  return authors, result.Error
+	return authors, result.Error
 }
 
 func (as *AuthorStore) GetAuthor(id uint64) (book.Author, error) {
 
-  var author book.Author
-  result := as.db.Preload("Books").First(&author, id)
+	var author book.Author
+	result := as.db.Preload("Books").First(&author, id)
 
-  return author, result.Error
+	return author, result.Error
 }

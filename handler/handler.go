@@ -14,7 +14,7 @@ type Handler struct {
 }
 
 func NewHandler(bs *bookst.BookStore, as *bookst.AuthorStore, cs *copyst.BookInstanceStore,
-    gs *genrest.GenreStore) *Handler {
+	gs *genrest.GenreStore) *Handler {
 	return &Handler{
 		bookStore:   bs,
 		authorStore: as,

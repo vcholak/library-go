@@ -2,6 +2,7 @@ package store
 
 import (
 	"github.com.vcholak.library/genre"
+
 	"gorm.io/gorm"
 )
 
@@ -9,7 +10,7 @@ type GenreStore struct {
 	db *gorm.DB
 }
 
-func NewGerneStore(db *gorm.DB) *GenreStore  {
+func NewGenreStore(db *gorm.DB) *GenreStore {
 	return &GenreStore{
 		db: db,
 	}
@@ -24,24 +25,24 @@ func (gs *GenreStore) GenreCount() (int64, error) {
 
 func (gs *GenreStore) NewGenre(genre *genre.Genre) error {
 
-  result := gs.db.Create(genre)
+	result := gs.db.Create(genre)
 
-  return result.Error
+	return result.Error
 }
 
 func (gs *GenreStore) Genres() ([]genre.Genre, error) {
 
-  var genres []genre.Genre
+	var genres []genre.Genre
 
-  result := gs.db.Find(&genres)
+	result := gs.db.Find(&genres)
 
-  return genres, result.Error
+	return genres, result.Error
 }
 
 func (gs *GenreStore) GetGerne(id uint64) (genre.Genre, error) {
 
-  var gerne genre.Genre
-  result := gs.db.First(&gerne, id)
+	var gerne genre.Genre
+	result := gs.db.First(&gerne, id)
 
-  return gerne, result.Error
+	return gerne, result.Error
 }

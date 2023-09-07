@@ -20,7 +20,7 @@ func main() {
 	bs := bookst.NewBookStore(d)
 	as := bookst.NewAuthorStore(d)
 	cs := copyst.NewBookInstanceStore(d)
-	gs := genrest.NewGerneStore(d)
+	gs := genrest.NewGenreStore(d)
 
 	h := handler.NewHandler(bs, as, cs, gs)
 
