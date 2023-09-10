@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com.vcholak.library/book"
+	"github.com.vcholak.library/copy"
 	"github.com.vcholak.library/genre"
 
 	"github.com/labstack/echo/v4"
@@ -37,6 +38,7 @@ func (h *Handler) Register(v1 *echo.Group) {
 	copies.HEAD("", h.CopiesTotal)
 	copies.HEAD("/available", h.AvailableCopiesTotal)
 	copies.GET("", h.Copies)
+	copies.POST("", h.CreateBookCopy)
 }
 
 // BooksTotal returns total number of Books
@@ -66,6 +68,7 @@ func (h *Handler) Books(c echo.Context) error {
 	return c.JSON(http.StatusOK, books)
 }
 
+// GetBook returns a book
 func (h *Handler) GetBook(c echo.Context) error {
 	s := c.Param("id")
 
@@ -84,6 +87,7 @@ func (h *Handler) GetBook(c echo.Context) error {
 	return c.JSON(http.StatusOK, book)
 }
 
+// CreateBook creates a book
 func (h *Handler) CreateBook(c echo.Context) error {
 	book := new(book.Book)
 	if err := c.Bind(book); err != nil {
@@ -93,7 +97,7 @@ func (h *Handler) CreateBook(c echo.Context) error {
 
 	author, err := h.authorStore.GetAuthor(uint64(book.AuthorId))
 	if err != nil {
-		fmt.Println("CreateBook error:", err)
+		fmt.Println("GetAuthor error:", err)
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 	book.Author = author
@@ -166,7 +170,7 @@ func (h *Handler) CreateAuthor(c echo.Context) error {
 	return c.JSON(http.StatusOK, author)
 }
 
-// GetAuthor returns author details
+// GetAuthor returns the author details
 func (h *Handler) GetAuthor(c echo.Context) error {
 
 	s := c.Param("id")
@@ -215,7 +219,7 @@ func (h *Handler) AvailableCopiesTotal(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-// Copies returns all book copies
+// Copies returns all BookInstances
 func (h *Handler) Copies(c echo.Context) error {
 	copies, err := h.copyStore.BookInstances()
 	if err != nil {
@@ -224,6 +228,29 @@ func (h *Handler) Copies(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, copies)
+}
+
+// CreateBookCopy creates a new BookInstance
+func (h *Handler) CreateBookCopy(c echo.Context) error {
+	book_copy := new(copy.BookInstance)
+	if err := c.Bind(book_copy); err != nil {
+		fmt.Println("CreateBookCopy error:", err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	book, err := h.bookStore.GetBook(uint64(book_copy.BookId))
+	if err != nil {
+		fmt.Println("GetBook error:", err)
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	book_copy.Book = book
+
+	if err := h.copyStore.NewBookInstance(book_copy); err != nil {
+		fmt.Println("CreateBookCopy error:", err)
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	fmt.Println("Created book copy:", book_copy)
+	return c.JSON(http.StatusOK, book_copy)
 }
 
 // -------------------------------------------------

@@ -8,8 +8,8 @@ import (
 
 // `BookInstance` belongs to `Book`, `BookID` is the foreign key
 type BookInstance struct {
-	ID      uint `json:"id"`
-	BookId  uint
+	ID      uint               `json:"id"`
+	BookId  uint               `json:"book_id"`
 	Book    book.Book          `json:"book"` // `gorm:"foreignkey:ID"`
 	Imprint string             `gorm:"not null" json:"imprint"`
 	Status  BookInstanceStatus `gorm:"not null" json:"status"`
