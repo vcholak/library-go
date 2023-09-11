@@ -19,6 +19,7 @@ func (h *Handler) Register(v1 *echo.Group) {
 	authors.GET("", h.Authors)
 	authors.POST("", h.CreateAuthor)
 	authors.GET("/:id", h.GetAuthor)
+	authors.PUT("/:id", h.UpdateAuthor)
 
 	genres := v1.Group("/genres")
 	genres.HEAD("", h.GenresTotal)
@@ -184,6 +185,32 @@ func (h *Handler) GetAuthor(c echo.Context) error {
 	author, err2 := h.authorStore.GetAuthor(id)
 	if err2 != nil {
 		fmt.Println("GetAuthor error:", err2)
+		return c.JSON(http.StatusInternalServerError, err2)
+	}
+
+	return c.JSON(http.StatusOK, author)
+}
+
+// UpdateAuthor updates Author
+func (h *Handler) UpdateAuthor(c echo.Context) error {
+
+	s := c.Param("id")
+	id, err := strconv.ParseUint(s, 10, 64)
+	if err != nil {
+		fmt.Println("UpdateAuthor error:", err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	author := new(book.Author)
+	if err := c.Bind(author); err != nil {
+		fmt.Println("UpdateAuthor error:", err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	author.ID = uint(id)
+
+	err2 := h.authorStore.UpdateAuthor(author)
+	if err2 != nil {
+		fmt.Println("UpdateAuthor error:", err2)
 		return c.JSON(http.StatusInternalServerError, err2)
 	}
 

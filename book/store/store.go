@@ -100,3 +100,10 @@ func (as *AuthorStore) GetAuthor(id uint64) (book.Author, error) {
 
 	return author, result.Error
 }
+
+func (as *AuthorStore) UpdateAuthor(author *book.Author) error {
+
+	result := as.db.Save(author)
+
+	return result.Error
+}
