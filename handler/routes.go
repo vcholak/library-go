@@ -118,9 +118,30 @@ func (h *Handler) CreateBook(c echo.Context) error {
 	return c.JSON(http.StatusOK, book)
 }
 
+// UpdateBook updates a Book
 func (h *Handler) UpdateBook(c echo.Context) error {
-	//
-	return nil
+
+	s := c.Param("id")
+	id, err := strconv.ParseUint(s, 10, 64)
+	if err != nil {
+		fmt.Println("UpdateBook error:", err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	book := new(book.Book)
+	if err := c.Bind(book); err != nil {
+		fmt.Println("UpdateBook error:", err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	book.ID = uint(id)
+
+	err2 := h.bookStore.UpdateBook(book)
+	if err2 != nil {
+		fmt.Println("UpdateBook error:", err2)
+		return c.JSON(http.StatusInternalServerError, err2)
+	}
+
+	return c.JSON(http.StatusOK, book)
 }
 
 func (h *Handler) DeleteBook(c echo.Context) error {

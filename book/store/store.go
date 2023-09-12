@@ -59,6 +59,13 @@ func (bs *BookStore) GetBook(id uint64) (book.Book, error) {
 	return book, result.Error
 }
 
+func (bs *BookStore) UpdateBook(book *book.Book) error {
+
+	result := bs.db.Save(book)
+
+	return result.Error
+}
+
 // ------------------------------
 type AuthorStore struct {
 	db *gorm.DB

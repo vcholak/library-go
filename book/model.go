@@ -25,6 +25,6 @@ type Author struct {
 	FamilyName string         `gorm:"not null" json:"family_name"`
 	BirthDate  datatypes.Date `gorm:"not null" json:"birth_date"`
 	DeathDate  datatypes.Date `json:"death_date"`
-	LifeSpan   string         `json:"life_span"`
+	LifeSpan   string         `gorm:"not null" json:"life_span"`
 	Books      []Book         `json:"books"`
 }
