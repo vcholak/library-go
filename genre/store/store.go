@@ -46,3 +46,10 @@ func (gs *GenreStore) GetGerne(id uint64) (genre.Genre, error) {
 
 	return gerne, result.Error
 }
+
+func (gs *GenreStore) UpdateGenre(genre *genre.Genre) error {
+
+	result := gs.db.Save(genre)
+
+	return result.Error
+}

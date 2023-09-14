@@ -26,6 +26,7 @@ func (h *Handler) Register(v1 *echo.Group) {
 	genres.GET("", h.Genres)
 	genres.GET("/:id", h.GetGenre)
 	genres.POST("", h.CreateGenre)
+	genres.PUT("/:id", h.UpdateGenre)
 
 	books := v1.Group("/books")
 	books.HEAD("", h.BooksTotal)
@@ -406,6 +407,32 @@ func (h *Handler) GetGenre(c echo.Context) error {
 	genre, err2 := h.genreStore.GetGerne(id)
 	if err2 != nil {
 		fmt.Println("GetGenre error:", err2)
+		return c.JSON(http.StatusInternalServerError, err2)
+	}
+
+	return c.JSON(http.StatusOK, genre)
+}
+
+// UpdateGenre update Genre
+func (h *Handler) UpdateGenre(c echo.Context) error {
+
+	s := c.Param("id")
+	id, err := strconv.ParseUint(s, 10, 64)
+	if err != nil {
+		fmt.Println("UpdateGenre error:", err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	genre := new(genre.Genre)
+	if err := c.Bind(genre); err != nil {
+		fmt.Println("UpdateGenre error:", err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	genre.ID = uint(id)
+
+	err2 := h.genreStore.UpdateGenre(genre)
+	if err2 != nil {
+		fmt.Println("UpdateGenre error:", err2)
 		return c.JSON(http.StatusInternalServerError, err2)
 	}
 
