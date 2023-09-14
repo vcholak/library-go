@@ -46,3 +46,18 @@ func (bs *BookInstanceStore) NewBookInstance(copy *copy.BookInstance) error {
 
 	return result.Error
 }
+
+func (bs *BookInstanceStore) GetBookInstance(id uint64) (copy.BookInstance, error) {
+
+	var bookCopy copy.BookInstance
+	result := bs.db.Preload("Book").Preload("Book.Author").First(&bookCopy, id)
+
+	return bookCopy, result.Error
+}
+
+func (bs *BookInstanceStore) UpdateBookInstance(bookCopy *copy.BookInstance) error {
+
+	result := bs.db.Save(bookCopy)
+
+	return result.Error
+}

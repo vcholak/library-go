@@ -40,6 +40,8 @@ func (h *Handler) Register(v1 *echo.Group) {
 	copies.HEAD("/available", h.AvailableCopiesTotal)
 	copies.GET("", h.Copies)
 	copies.POST("", h.CreateBookCopy)
+	copies.GET("/:id", h.GetBookCopy)
+	copies.PUT("/:id", h.UpdateBookCopy)
 }
 
 // BooksTotal returns total number of Books
@@ -69,7 +71,7 @@ func (h *Handler) Books(c echo.Context) error {
 	return c.JSON(http.StatusOK, books)
 }
 
-// GetBook returns a book
+// GetBook returns Book details
 func (h *Handler) GetBook(c echo.Context) error {
 	s := c.Param("id")
 
@@ -298,6 +300,51 @@ func (h *Handler) CreateBookCopy(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 	fmt.Println("Created book copy:", book_copy)
+	return c.JSON(http.StatusOK, book_copy)
+}
+
+// GetBookCopy returns BookInstance details
+func (h *Handler) GetBookCopy(c echo.Context) error {
+	s := c.Param("id")
+
+	id, err := strconv.ParseUint(s, 10, 64)
+	if err != nil {
+		fmt.Println("GetBookCopy error:", err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	bookCopy, err2 := h.copyStore.GetBookInstance(id)
+	if err2 != nil {
+		fmt.Println("GetBookCopy error:", err2)
+		return c.JSON(http.StatusInternalServerError, err2)
+	}
+
+	return c.JSON(http.StatusOK, bookCopy)
+}
+
+// UpdateBookCopy updates a BookInstance
+func (h *Handler) UpdateBookCopy(c echo.Context) error {
+
+	s := c.Param("id")
+	id, err := strconv.ParseUint(s, 10, 64)
+	if err != nil {
+		fmt.Println("UpdateBookCopy error:", err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	book_copy := new(copy.BookInstance)
+	if err := c.Bind(book_copy); err != nil {
+		fmt.Println("UpdateBookCopy error:", err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	book_copy.ID = uint(id)
+
+	err2 := h.copyStore.UpdateBookInstance(book_copy)
+	if err2 != nil {
+		fmt.Println("UpdateBookCopy error:", err2)
+		return c.JSON(http.StatusInternalServerError, err2)
+	}
+
 	return c.JSON(http.StatusOK, book_copy)
 }
 
