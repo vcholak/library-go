@@ -26,7 +26,7 @@ func (bs *BookInstanceStore) BookInstanceCount() (int64, error) {
 
 func (bs *BookInstanceStore) AvailableBookInstanceCount() (int64, error) {
 	var count int64
-	bs.db.Model(&copy.BookInstance{}).Count(&count) //TODO fix
+	bs.db.Model(&copy.BookInstance{}).Where("Status=?", 5).Count(&count)
 
 	return count, nil
 }
