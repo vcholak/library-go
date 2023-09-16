@@ -10,10 +10,10 @@ import (
 type BookInstance struct {
 	ID      uint               `json:"id"`
 	BookId  uint               `json:"book_id"`
-	Book    book.Book          `json:"book"` // `gorm:"foreignkey:ID"`
+	Book    book.Book          `json:"book"`
 	Imprint string             `gorm:"not null" json:"imprint"`
 	Status  BookInstanceStatus `gorm:"not null" json:"status"`
-	DueBack datatypes.Date     `gorm:"not null" json:"due_date"`
+	DueBack *datatypes.Date    `json:"due_date"`
 }
 
 type BookInstanceStatus uint8
